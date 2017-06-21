@@ -36,7 +36,7 @@ WITH_020_LIB=yes
 
 # Uncomment this out if you want extra libraries
 # for ColdFire V4e processors.
-WITH_V4E_LIB=yes
+WITH_V4E_LIB=no
 
 # Uncomment this out if you want a debuggable lib lib_g.a.
 #WITH_DEBUG_LIB=yes
@@ -123,7 +123,7 @@ RANLIB=$(toolprefix)ranlib
 # ATTENTION: You have to optimize at least with -O, otherwise some
 # extern inlines will not work and will cause unresolved references
 # in certain modules.
-CFLAGS=-O2 -fomit-frame-pointer -fgnu89-inline
+CFLAGS=-O2 -fomit-frame-pointer
 
 # Flags for building executables
 LDFLAGS=
@@ -132,7 +132,7 @@ LDFLAGS=
 DEFS=
 
 # Define this to the warning level you want.
-WARN=-Wall -Werror
+WARN=-Wall
 
 # If your system lacks a BSD compatible install you should set this
 # variable to "$(top_srcdir}/install-sh".
