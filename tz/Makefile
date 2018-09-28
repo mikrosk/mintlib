@@ -59,15 +59,15 @@ zdump = ./zdump_for_build$(EXEEXT_FOR_BUILD)
 zdump_for_build$(EXEEXT_FOR_BUILD): zdump_for_build.o $(OBJS_FOR_BUILD)
 	$(AM_V_LD)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD) -o $@ $^
 zic_for_build.o: zic.c
-	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) -c -o $@ $<
 zdump_for_build.o: zdump.c
-	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) -c -o $@ $<
 localtime_for_build.o: localtime.c
-	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) -c -o $@ $<
 asctime_for_build.o: asctime.c
-	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) -c -o $@ $<
 strftime_for_build.o: strftime.c
-	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -c -o $@ $<
+	$(AM_V_CC)$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) -c -o $@ $<
 else
 
 zic = ./zic
