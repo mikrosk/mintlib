@@ -22,6 +22,7 @@
 #include "longlong.h"
 #include <ieee754.h>
 #include <float.h>
+#include <math.h>
 #include <stdlib.h>
 
 #ifndef __NO_LONG_DOUBLE_MATH

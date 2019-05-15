@@ -21,6 +21,7 @@
 #include "gmp-impl.h"
 #include <ieee754.h>
 #include <float.h>
+#include <math.h>
 
 #ifndef __NO_LONG_DOUBLE_MATH
 
