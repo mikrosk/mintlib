@@ -19,7 +19,7 @@
 
 /* Modified for MiNTLib by Frank Naumann <fnaumann@freemint.de>.  */
 
-#include "math_private.h"
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/param.h>

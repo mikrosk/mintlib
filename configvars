@@ -146,7 +146,7 @@ LDFLAGS=
 DEFS=
 
 # Define this to the warning level you want.
-WARN=-Wall -Werror
+WARN=-Wall
 
 # If your system lacks a BSD compatible install you should set this
 # variable to "$(top_srcdir}/install-sh".
