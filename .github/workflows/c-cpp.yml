@@ -7,36 +7,64 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    # m68k-atari-mint-gcc is still compiled against 16.04's runtime
+    # btw 18.04+ requires sudo apt-get install libfl-dev
+    runs-on: ubuntu-16.04
+    # skip PRs for now
+    if: ${{ github.repository == 'mikrosk/mintlib' }}
 
     steps:
     - name: Setting environment variables (1/2)
       run: |
+        echo "SCRIPTS_DIR=${GITHUB_WORKSPACE}/.github/scripts" >> $GITHUB_ENV
         echo "PROJECT_REPO=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)" >> $GITHUB_ENV
         echo "PROJECT_NAME=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 2)" >> $GITHUB_ENV
         echo "PROJECT_VERSION=0.60.1" >> $GITHUB_ENV
-        echo "DEPLOY_ARCHIVE='tar.bz2'" >> $GITHUB_ENV
-        echo "BINTRAY_USER='mikrosk'" >> $GITHUB_ENV
-        # BINTRAY_API_KEY is defined in Travis Settings of freemint/mintlib
-        echo "BINTRAY_REPO='lib'" >> $GITHUB_ENV
+        echo "DEPLOY_ARCHIVE=tar.bz2" >> $GITHUB_ENV
+        echo "BINTRAY_USER=mikrosk" >> $GITHUB_ENV
+        echo "BINTRAY_API_KEY=$BINTRAY_API_KEY" >> $GITHUB_ENV
+        echo "BINTRAY_REPO=lib" >> $GITHUB_ENV
+      env:
+        BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
+
     - name: Setting environment variables (2/2)
       run: |
         echo "INSTALL_DIR=/tmp/${PROJECT_NAME}" >> $GITHUB_ENV
         echo "DEPLOY_DIR=/tmp/${PROJECT_NAME}-deploy" >> $GITHUB_ENV
 
-    - name: Verify environment variables
-      run: echo "$PROJECT_REPO, $PROJECT_NAME, $PROJECT_VERSION, $INSTALL_DIR, $DEPLOY_DIR, $DEPLOY_ARCHIVE, $BINTRAY_USER, $BINTRAY_REPO"
-
     - uses: actions/checkout@v2
 
-    - name: configure
-      run: ./configure
+    # Keep the Travis CI structure for now
+    - name: before_install
+      run: |
+        wget -q -O - https://github.com/mikrosk/travis-scripts/archive/master.tar.gz | tar xzf - --strip-components=1 -C ${SCRIPTS_DIR}
+        if [ -x ${SCRIPTS_DIR}/before_install.sh ]; then ${SCRIPTS_DIR}/before_install.sh; else true; fi
 
-    - name: make
-      run: make
+    - name: install
+      run:  if [ -x ${SCRIPTS_DIR}/install.sh ]; then ${SCRIPTS_DIR}/install.sh; else true; fi
 
-    - name: make check
-      run: make check
+    - name: before_script
+      run: if [ -x ${SCRIPTS_DIR}/before_script.sh ]; then ${SCRIPTS_DIR}/before_script.sh; else true; fi
 
-    - name: make distcheck
-      run: make distcheck
+    - name: script
+      run: if [ -x ${SCRIPTS_DIR}/script.sh ]; then ${SCRIPTS_DIR}/script.sh; else true; fi
+
+    - name: before_deploy
+      run: if [ -x ${SCRIPTS_DIR}/before_deploy.sh ]; then ${SCRIPTS_DIR}/before_deploy.sh; else true; fi
+
+    - name: deploy
+      run: echo "TODO"
+      # provider: bintray
+      # file: ".travis/bintray.desc"
+      # user: "${BINTRAY_USER}"
+      # key: "${BINTRAY_API_KEY}"
+      # skip_cleanup: true
+      # on:
+      # branch: master
+      # repo: freemint/mintlib
+
+    - name: after_deploy
+      run: if [ -x ${SCRIPTS_DIR}/after_deploy.sh ]; then ${SCRIPTS_DIR}/after_deploy.sh; else true; fi
+
+    - name: after_script
+      run: if [ -x ${SCRIPTS_DIR}/after_script.sh ]; then ${SCRIPTS_DIR}/after_script.sh; else true; fi
