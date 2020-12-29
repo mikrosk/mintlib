@@ -56,17 +56,18 @@ jobs:
       run: if [ -x ${SCRIPTS_DIR}/before_deploy.sh ]; then ${SCRIPTS_DIR}/before_deploy.sh; else true; fi
 
     - name: deploy
-      uses: reznikmm/upload-bintray-action@v4
+      uses: mikrosk/upload-bintray-action@master
       with:
         subject: freemint
         repository: ${{ env.BINTRAY_REPO }}             # should be "freemint" by default
         package: ${{ env.PROJECT_NAME }}
         version: ${{ env.PROJECT_VERSION }}-${{ env.LONG_ID }}  # should be BINTRAY_VERSION with this default
+        versionDesc: "Commit URL: https://github.com/${{ env.PROJECT_REPO }}/${{ env.PROJECT_NAME }}/commit/${{ env.LONG_ID }}"
         sourcePath: ${{ env.DEPLOY_DIR }}/*.tar.bz2
+        destinationPath: ${{ env.PROJECT_NAME }}/${{ env.PROJECT_VERSION }}-${{ env.LONG_ID }}
         override: 1
         username: ${{ env.BINTRAY_USER }}
         apiKey: ${{ env.BINTRAY_API_KEY }}
-        # missing commit id...
 
 #sed -i -e "s/PACKAGE_NAME/${PROJECT_NAME}/g;" .travis/bintray.desc
 #BINTRAY_REPO=${BINTRAY_REPO:-"freemint"}
