@@ -14,9 +14,14 @@ jobs:
     if: ${{ github.repository == 'mikrosk/mintlib' }}
 
     steps:
-    - uses: mikrosk/gha-scripts/test-action@master
+    - name: Setting environment variables (1/2)
+      run: echo "PROJECT_VERSION=0.60.1" >> $GITHUB_ENV
+
+    - uses: mikrosk/github-actions/test-action@master
       with:
-        who-to-greet: 'World'
+        who-to-greet: |
+          'World'
+          'Another world'
 
     #- name: Setting environment variables (1/2)
       #run: |
@@ -61,7 +66,7 @@ jobs:
       #run: if [ -x ${SCRIPTS_DIR}/before_deploy.sh ]; then ${SCRIPTS_DIR}/before_deploy.sh; else true; fi
 
     #- name: deploy
-      #uses: reznikmm/upload-bintray-action@master
+      #uses: reznikmm/upload-bintray-action@29e3a4d9
       #with:
         #subject: freemint
         #repository: ${{ env.BINTRAY_REPO }}             # should be "freemint" by default
