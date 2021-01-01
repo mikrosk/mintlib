@@ -18,74 +18,74 @@ jobs:
       with:
         who-to-greet: 'World'
 
-    - name: Setting environment variables (1/2)
-      run: |
-        echo "PROJECT_VERSION=0.60.1" >> $GITHUB_ENV
-        echo "DEPLOY_ARCHIVE=tar.bz2" >> $GITHUB_ENV
-        echo "BINTRAY_REPO=lib" >> $GITHUB_ENV
+    #- name: Setting environment variables (1/2)
+      #run: |
+        #echo "PROJECT_VERSION=0.60.1" >> $GITHUB_ENV
+        #echo "DEPLOY_ARCHIVE=tar.bz2" >> $GITHUB_ENV
+        #echo "BINTRAY_REPO=lib" >> $GITHUB_ENV
 
-        echo "SCRIPTS_DIR=${GITHUB_WORKSPACE}/.github/scripts" >> $GITHUB_ENV
-        echo "PROJECT_REPO=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)" >> $GITHUB_ENV
-        echo "PROJECT_NAME=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 2)" >> $GITHUB_ENV
-        echo "BINTRAY_USER=mikrosk" >> $GITHUB_ENV
-        echo "BINTRAY_API_KEY=$BINTRAY_API_KEY" >> $GITHUB_ENV
-        echo "SHORT_ID=$(echo ${GITHUB_SHA} | cut -c 1-3)" >> $GITHUB_ENV
-        echo "LONG_ID=$(echo ${GITHUB_SHA} | cut -c 1-8)" >> $GITHUB_ENV
+        #echo "SCRIPTS_DIR=${GITHUB_WORKSPACE}/.github/scripts" >> $GITHUB_ENV
+        #echo "PROJECT_REPO=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 1)" >> $GITHUB_ENV
+        #echo "PROJECT_NAME=$(echo $GITHUB_REPOSITORY | cut -d '/' -f 2)" >> $GITHUB_ENV
+        #echo "BINTRAY_USER=mikrosk" >> $GITHUB_ENV
+        #echo "BINTRAY_API_KEY=$BINTRAY_API_KEY" >> $GITHUB_ENV
+        #echo "SHORT_ID=$(echo ${GITHUB_SHA} | cut -c 1-3)" >> $GITHUB_ENV
+        #echo "LONG_ID=$(echo ${GITHUB_SHA} | cut -c 1-8)" >> $GITHUB_ENV
 
-      env:
-        BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
+      #env:
+        #BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
 
-    - name: Setting environment variables (2/2)
-      run: |
-        echo "INSTALL_DIR=/tmp/${PROJECT_NAME}" >> $GITHUB_ENV
-        echo "DEPLOY_DIR=/tmp/${PROJECT_NAME}-deploy" >> $GITHUB_ENV
+    #- name: Setting environment variables (2/2)
+      #run: |
+        #echo "INSTALL_DIR=/tmp/${PROJECT_NAME}" >> $GITHUB_ENV
+        #echo "DEPLOY_DIR=/tmp/${PROJECT_NAME}-deploy" >> $GITHUB_ENV
 
-    - uses: actions/checkout@v2
+    #- uses: actions/checkout@v2
 
-    # Keep the Travis CI structure for now
-    - name: before_install
-      run: |
-        wget -q -O - https://github.com/mikrosk/travis-scripts/archive/master.tar.gz | tar xzf - --strip-components=1 -C ${SCRIPTS_DIR}
-        if [ -x ${SCRIPTS_DIR}/before_install.sh ]; then ${SCRIPTS_DIR}/before_install.sh; else true; fi
+    ## Keep the Travis CI structure for now
+    #- name: before_install
+      #run: |
+        #wget -q -O - https://github.com/mikrosk/travis-scripts/archive/master.tar.gz | tar xzf - --strip-components=1 -C ${SCRIPTS_DIR}
+        #if [ -x ${SCRIPTS_DIR}/before_install.sh ]; then ${SCRIPTS_DIR}/before_install.sh; else true; fi
 
-    - name: install
-      run:  if [ -x ${SCRIPTS_DIR}/install.sh ]; then ${SCRIPTS_DIR}/install.sh; else true; fi
+    #- name: install
+      #run:  if [ -x ${SCRIPTS_DIR}/install.sh ]; then ${SCRIPTS_DIR}/install.sh; else true; fi
 
-    - name: before_script
-      run: if [ -x ${SCRIPTS_DIR}/before_script.sh ]; then ${SCRIPTS_DIR}/before_script.sh; else true; fi
+    #- name: before_script
+      #run: if [ -x ${SCRIPTS_DIR}/before_script.sh ]; then ${SCRIPTS_DIR}/before_script.sh; else true; fi
 
-    - name: script
-      run: if [ -x ${SCRIPTS_DIR}/script.sh ]; then ${SCRIPTS_DIR}/script.sh; else true; fi
+    #- name: script
+      #run: if [ -x ${SCRIPTS_DIR}/script.sh ]; then ${SCRIPTS_DIR}/script.sh; else true; fi
 
-    - name: before_deploy
-      run: if [ -x ${SCRIPTS_DIR}/before_deploy.sh ]; then ${SCRIPTS_DIR}/before_deploy.sh; else true; fi
+    #- name: before_deploy
+      #run: if [ -x ${SCRIPTS_DIR}/before_deploy.sh ]; then ${SCRIPTS_DIR}/before_deploy.sh; else true; fi
 
-    - name: deploy
-      uses: reznikmm/upload-bintray-action@master
-      with:
-        subject: freemint
-        repository: ${{ env.BINTRAY_REPO }}             # should be "freemint" by default
-        package: ${{ env.PROJECT_NAME }}
-        version: ${{ env.PROJECT_VERSION }}-${{ env.LONG_ID }}  # should be BINTRAY_VERSION with this default
-        versionDesc: "Commit URL: https://github.com/${{ env.PROJECT_REPO }}/${{ env.PROJECT_NAME }}/commit/${{ env.LONG_ID }}"
-        sourcePath: ${{ env.DEPLOY_DIR }}/*.tar.bz2
-        destinationPath: ${{ env.PROJECT_NAME }}/${{ env.PROJECT_VERSION }}-${{ env.LONG_ID }}
-        override: 1
-        username: ${{ env.BINTRAY_USER }}
-        apiKey: ${{ env.BINTRAY_API_KEY }}
+    #- name: deploy
+      #uses: reznikmm/upload-bintray-action@master
+      #with:
+        #subject: freemint
+        #repository: ${{ env.BINTRAY_REPO }}             # should be "freemint" by default
+        #package: ${{ env.PROJECT_NAME }}
+        #version: ${{ env.PROJECT_VERSION }}-${{ env.LONG_ID }}  # should be BINTRAY_VERSION with this default
+        #versionDesc: "Commit URL: https://github.com/${{ env.PROJECT_REPO }}/${{ env.PROJECT_NAME }}/commit/${{ env.LONG_ID }}"
+        #sourcePath: ${{ env.DEPLOY_DIR }}/*.tar.bz2
+        #destinationPath: ${{ env.PROJECT_NAME }}/${{ env.PROJECT_VERSION }}-${{ env.LONG_ID }}
+        #override: 1
+        #username: ${{ env.BINTRAY_USER }}
+        #apiKey: ${{ env.BINTRAY_API_KEY }}
 
-#sed -i -e "s/PACKAGE_NAME/${PROJECT_NAME}/g;" .travis/bintray.desc
-#BINTRAY_REPO=${BINTRAY_REPO:-"freemint"}
-#sed -i -e "s/REPO_NAME/${BINTRAY_REPO}/g;" .travis/bintray.desc
-#BINTRAY_VERSION=${BINTRAY_VERSION:-${PROJECT_VERSION}}
-#sed -i -e "s/PACKAGE_VERSION/${BINTRAY_VERSION}-${LONG_ID}/g;" .travis/bintray.desc
-#sed -i -e "s/COMMIT_ID/${LONG_ID}/g;" .travis/bintray.desc
-#sed -i -e "s/COMMIT_URL/https:\/\/github.com\/${PROJECT_REPO}\/${PROJECT_NAME}\/commit\/${LONG_ID}/g;" .travis/bintray.desc
-# ${DEPLOY_DIR} must not contain '#'
-#sed -i -e "s#DEPLOY_DIR#${DEPLOY_DIR}#g;" .travis/bintray.desc
+##sed -i -e "s/PACKAGE_NAME/${PROJECT_NAME}/g;" .travis/bintray.desc
+##BINTRAY_REPO=${BINTRAY_REPO:-"freemint"}
+##sed -i -e "s/REPO_NAME/${BINTRAY_REPO}/g;" .travis/bintray.desc
+##BINTRAY_VERSION=${BINTRAY_VERSION:-${PROJECT_VERSION}}
+##sed -i -e "s/PACKAGE_VERSION/${BINTRAY_VERSION}-${LONG_ID}/g;" .travis/bintray.desc
+##sed -i -e "s/COMMIT_ID/${LONG_ID}/g;" .travis/bintray.desc
+##sed -i -e "s/COMMIT_URL/https:\/\/github.com\/${PROJECT_REPO}\/${PROJECT_NAME}\/commit\/${LONG_ID}/g;" .travis/bintray.desc
+## ${DEPLOY_DIR} must not contain '#'
+##sed -i -e "s#DEPLOY_DIR#${DEPLOY_DIR}#g;" .travis/bintray.desc
 
-    - name: after_deploy
-      run: if [ -x ${SCRIPTS_DIR}/after_deploy.sh ]; then ${SCRIPTS_DIR}/after_deploy.sh; else true; fi
+    #- name: after_deploy
+      #run: if [ -x ${SCRIPTS_DIR}/after_deploy.sh ]; then ${SCRIPTS_DIR}/after_deploy.sh; else true; fi
 
-    - name: after_script
-      run: if [ -x ${SCRIPTS_DIR}/after_script.sh ]; then ${SCRIPTS_DIR}/after_script.sh; else true; fi
+    #- name: after_script
+      #run: if [ -x ${SCRIPTS_DIR}/after_script.sh ]; then ${SCRIPTS_DIR}/after_script.sh; else true; fi
